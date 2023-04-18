@@ -1,0 +1,63 @@
+﻿@model ExampleMVCProject.Models.ViewModels.ChartDataSumaryVM
+
+@{
+	ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+	<h1 class="display-4">Welcome to In and Out Controller</h1>
+	<h3 class="m-4">Summary of information:</h3>
+	<div class="row">
+		<div class="col-6">
+			<canvas id="chartBorrowedItems" style="max-width:500px; max-height:500px; display:inline;" class="border"></canvas>
+		</div>
+		<div class="col-6 ">
+			<canvas id="chartExpenses" style="max-width:500px!important; max-height:500px; display:inline;" class="border"></canvas>
+		</div>
+	</div>
+
+
+	<script>
+		const ctxBorrowedItems = document.getElementById('chartBorrowedItems');
+		new Chart(ctxBorrowedItems, {
+			type: 'pie',
+			data: {
+				labels: [
+					'Returned',
+					'Not Returned'
+				],
+				datasets: [{
+					label: 'Borrowed Items',
+					data: [@Model.TotalItemsBorrowedReturned, @Model.TotalItemsBorrowedNotReturned],
+					backgroundColor: [
+						'#0d6efd',
+						'#bb2d3b'
+
+					],
+					hoverOffset: 4
+				}]
+			}
+		});
+
+		const ctxExpenses = document.getElementById('chartExpenses');
+		new Chart(ctxExpenses, {
+			type: 'pie',
+			data: {
+				labels: [
+					'Paid',
+					'Not Paid'
+				],
+				datasets: [{
+					label: 'Expenses',
+					data: [@Model.TotalExpensesPaid, @Model.TotalExpensesNotPaid],
+					backgroundColor: [
+						'#0d6efd',
+						'#bb2d3b'
+
+					],
+					hoverOffset: 4
+				}]
+			}
+		});
+	</script>
+</div>

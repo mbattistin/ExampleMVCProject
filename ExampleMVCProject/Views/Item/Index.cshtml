@@ -1,0 +1,104 @@
+﻿@model IEnumerable<ExampleMVCProject.Models.Item>
+
+<link rel="stylesheet" href="~/css/common.css" asp-append-version="true" />
+
+@{
+	ViewData["Title"] = "Borrowed Items";
+}
+
+<div class="container p-3">
+	<div class="row pt-4">
+		<div class="col-12  mb-2">
+			<h2>Borrowed Items List</h2>
+		</div>
+		<form asp-action="Index" method="get" class="col-6" style="display: inline-flex;">
+			<input type="text" maxlength="300" name="SearchString" value="@ViewData["CurrentFilter"]" class="form-control w-75" placeholder="Type a keyword to search" />
+			<button type="submit" class="btn btn-primary" style="margin-left: 5px;" title="Search by keyword"><i class="fa-solid fa-magnifying-glass"></i></button>
+			<a class="btn btn-dark" style="margin-left: 5px;" title="Clean searching" asp-action="Index">
+				<i class="fa-solid fa-eraser"></i>
+			</a>
+		</form>
+		<div class="col-6" style="float:right">
+			<a asp-controller="Item" asp-action="Create" class="btn btn-primary">
+				<i class="fa-solid fa-plus" style="margin-right: 5px;"></i>Create Item
+			</a>
+		</div>
+		@if (Model.Count() > 0)
+		{
+			<div class="col-12  mt-2">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>
+								<a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" style="text-decoration:none; display:inline-flex" title="Sort by item">
+									<i class="fa-solid fa-arrow-down-short-wide sort-icon" style="@(@ViewData["CurrentSortParm"].ToString() == "name" ? "display:block" : "display:none")"></i>
+									<i class="fa-solid fa-arrow-down-wide-short sort-icon" style="@(@ViewData["CurrentSortParm"].ToString() == "name_desc" ? "display:block" : "display:none")"></i>
+									Item Name
+								</a>
+							</th>
+							<th>
+								<a asp-action="Index" asp-route-sortOrder="@ViewData["BorrowerSortParm"]" style="text-decoration:none; display:inline-flex" title="Sort by borrower">
+									<i class="fa-solid fa-arrow-down-short-wide sort-icon" style="@(@ViewData["CurrentSortParm"].ToString() == "borrower" ? "display:block" : "display:none")"></i>
+									<i class="fa-solid fa-arrow-down-wide-short sort-icon" style="@(@ViewData["CurrentSortParm"].ToString() == "borrower_desc" ? "display:block" : "display:none")"></i>
+									Borrower
+								</a>
+							</th>
+							<th>
+								<a asp-action="Index" asp-route-sortOrder="@ViewData["LenderSortParm"]" style="text-decoration:none; display:inline-flex" title="Sort by lender">
+									<i class="fa-solid fa-arrow-down-short-wide sort-icon" style="@(@ViewData["CurrentSortParm"].ToString() == "lender" ? "display:block" : "display:none")"></i>
+									<i class="fa-solid fa-arrow-down-wide-short sort-icon" style="@(@ViewData["CurrentSortParm"].ToString() == "lender_desc" ? "display:block" : "display:none")"></i>
+									Lender
+								</a>
+							</th>
+							<th>
+								<a asp-action="Index" asp-route-sortOrder="@ViewData["ReturnedDateSortParm"]" style="text-decoration:none; display:inline-flex" title="Sort by returned date">
+									<i class="fa-solid fa-arrow-down-short-wide sort-icon" style="@(@ViewData["CurrentSortParm"].ToString() == "returnedDate" ? "display:block" : "display:none")"></i>
+									<i class="fa-solid fa-arrow-down-wide-short sort-icon" style="@(@ViewData["CurrentSortParm"].ToString() == "returnedDate_desc" ? "display:block" : "display:none")"></i>
+									Returned Date
+								</a>
+							</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var item in Model)
+						{
+							<tr>
+								<td>@item.Name</td>
+								<td>@item.Borrower</td>
+								<td>@item.Lender</td>
+								<td>@item.ReturnedDate?.ToString("dd/MM/yyyy")</td>
+								<td align="right">
+									<a asp-controller="Item" asp-action="Update" asp-route-id="@item.Id" class="btn btn-primary" title="Update Item">
+										<i class="fa-solid fa-pen-to-square"></i>
+									</a>
+
+									<a asp-controller="Item" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" title="Delete Item"
+							   onclick="return confirm('Are you sure you want to delete item @item.Name?')">
+										<i class="fa-solid fa-trash"></i>
+									</a>
+								</td>
+							</tr>
+						}
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="3">
+								<b>Total of borrowed items:</b> @Model.Count()
+							</td>
+							<td colspan="4">
+								<b>Total of items returned:</b> @Model.Count(i => i.ReturnedDate != null)
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		}
+		else
+		{
+			<div class="alert alert-primary mt-2" role="alert">
+				<i class="fa-solid fa-circle-info"></i> No items found.
+			</div>
+		}
+	</div>
+</div>
